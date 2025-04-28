@@ -55,9 +55,25 @@
 
 <!-- creiamo il form -->
 <form method = "GET">
-    <label> parcheggio </label>
-    <input type="radio" name = "need_parking" value=1>yes
-    <input type="radio" name = "need_parking" value=0>no
+    <div>
+        <label> parcheggio </label>
+        <input type="radio" name = "need_parking" value=1>yes
+        <input type="radio" name = "need_parking" value=0>no
+    </div>
+    <div>
+    <label> vote </label>
+    <select name="vote" value="1">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+
+
+    </div>
+
+
     <button type="submit">invia</button>
 </form>
 
@@ -77,54 +93,63 @@
     ?>
 </tr>
 </thead>   
+    <!-- riga di intestazione -->
+    <?php
 
-<!-- riga di intestazione -->
-<?php
-
-//se need parking esiste
-if(isset($_GET['need_parking'])){
-    // ci salviamo la richiesta del client
-    $needParking = intval($_GET["need_parking"]);
-}else {
-    $needParking = null;
-}
-
-    // var_dump($needParking);
-
-    // se needParking è true allora mostrare solo gli hotel che hanno il parcheggio 
-    if($needParking == true ){
-     $filteredHotels = array_filter($hotels, fn($hotel)=> $hotel["parking"] == 1);
-        // cicliamo su l'array filtrato per ricavare gli elementi
-        foreach($filteredHotels as $filteredHotel){
-        // apriamo la riga della tabella
-        echo "<tr>";
-   
-        // per ogni hotel(associativo) richiaviamoci la coppia chiave valore
-        foreach ($filteredHotel as $key => $value){
-            // per ogli colonna stampiamo il valore
-            echo "<td>$value</td>";
-        };
-        // chiudiamo la riga una volta finito i valori
-        echo "</tr>";
-        }
-    } // altrimenti mostrarli tutti
-    else{
-
-    // cicliamo su tutto l'array per ricavare gli elementi
-    foreach ($hotels as $hotel){
-        // apriamo la riga della tabella
-        echo "<tr>";
-   
-        // per ogni hotel(associativo) richiaviamoci la coppia chiave valore
-        foreach ($hotel as $key => $value){
-            // per ogli colonna stampiamo il valore
-            echo "<td>$value</td>";
-        };
-        // chiudiamo la riga una volta finito i valori
-        echo "</tr>";
-    };
+    //ricaviamoci i dati del form
+    // Need Parking
+    if(isset($_GET['need_parking'])){
+        // ci salviamo la richiesta del client
+        $needParking = intval($_GET["need_parking"]);
+    }else {
+        $needParking = null;
     }
-?>
+
+    // Vote
+    $vote = intval($_GET['vote']);
+
+
+        // var_dump($needParking);
+
+
+        // mi creo un'array di hotel filtrati da riempire
+        $filteredHotels = [];
+
+        // ciclo sugli hotel e mi ricavo il singolo elemento
+        foreach($hotels as $hotel){
+            // se il cliente ha scelto il parcheggio
+            if($needParking != null){
+                //condizione sia sul parking che sul voto
+                if($hotel["parking"] == $needParking && $hotel["vote"] >= $vote){
+                    //inseriamo l'elemento all'interno dell'array creato
+                    array_push($filteredHotels, $hotel);
+                };
+                //se il cliente non ha scelto nessuna delle due
+            }else{
+                //condizione sul voto
+                if($hotel["vote"] >= $vote){
+                    //inseriamo l'elemento all'interno dell'array creato
+                    array_push($filteredHotels, $hotel);
+                };
+            };
+        };
+
+        // var_dump($filteredHotels);
+
+            // cicliamo su l'array filtrato per ricavare gli elementi
+            foreach($filteredHotels as $filteredHotel){
+            // apriamo la riga della tabella
+            echo "<tr>";
+    
+            // per ogni hotel(associativo) richiaviamoci la coppia chiave valore
+            foreach ($filteredHotel as $key => $value){
+                // per ogli colonna stampiamo il valore
+                echo "<td>$value</td>";
+            };
+            // chiudiamo la riga una volta finito i valori
+            echo "</tr>";
+            };
+    ?>
 
 
 
