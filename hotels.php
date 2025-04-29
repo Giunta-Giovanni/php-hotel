@@ -1,3 +1,61 @@
+<?php
+    $hotels = [
+        [
+            'name' => 'Hotel Belvedere',
+            'description' => 'Hotel Belvedere Descrizione',
+            'parking' => true,
+            'vote' => 4,
+            'distance_to_center' => 10.4
+        ],
+        [
+            'name' => 'Hotel Futuro',
+            'description' => 'Hotel Futuro Descrizione',
+            'parking' => true,
+            'vote' => 2,
+            'distance_to_center' => 2
+        ],
+        [
+            'name' => 'Hotel Rivamare',
+            'description' => 'Hotel Rivamare Descrizione',
+            'parking' => false,
+            'vote' => 1,
+            'distance_to_center' => 1
+        ],
+        [
+            'name' => 'Hotel Bellavista',
+            'description' => 'Hotel Bellavista Descrizione',
+            'parking' => false,
+            'vote' => 5,
+            'distance_to_center' => 5.5
+        ],
+        [
+            'name' => 'Hotel Milano',
+            'description' => 'Hotel Milano Descrizione',
+            'parking' => true,
+            'vote' => 2,
+            'distance_to_center' => 50
+        ],
+
+    ];
+
+// Controllo FILTRI
+// parcheggio
+$needParking = false;
+
+if(isset($_GET['need_parking']) && $_GET['need_parking'] == 1){
+    $needParking = true;
+};
+
+// voto
+$vote = 0;
+if(isset($_GET['vote']) && is_numeric($_GET['vote']) && $_GET['vote'] > 0 && $_GET['vote'] <= 5){
+    $vote = intval($_GET['vote']);
+}
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,53 +64,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Document</title>
 </head>
+
+
 <body>
-    <?php
-    // creiamo l'array bidimensionale
-        $hotels = [
-
-            [
-                'name' => 'Hotel Belvedere',
-                'description' => 'Hotel Belvedere Descrizione',
-                'parking' => true,
-                'vote' => 4,
-                'distance_to_center' => 10.4
-            ],
-            [
-                'name' => 'Hotel Futuro',
-                'description' => 'Hotel Futuro Descrizione',
-                'parking' => true,
-                'vote' => 2,
-                'distance_to_center' => 2
-            ],
-            [
-                'name' => 'Hotel Rivamare',
-                'description' => 'Hotel Rivamare Descrizione',
-                'parking' => false,
-                'vote' => 1,
-                'distance_to_center' => 1
-            ],
-            [
-                'name' => 'Hotel Bellavista',
-                'description' => 'Hotel Bellavista Descrizione',
-                'parking' => false,
-                'vote' => 5,
-                'distance_to_center' => 5.5
-            ],
-            [
-                'name' => 'Hotel Milano',
-                'description' => 'Hotel Milano Descrizione',
-                'parking' => true,
-                'vote' => 2,
-                'distance_to_center' => 50
-            ],
-
-        ];
-        // stampiamo l'array schermo
-    ?>
-
-
-
     <!-- creiamo il form -->
     <div class="container mt-4">
         <form method="GET" class="p-4 border rounded bg-light">
@@ -72,6 +86,7 @@
             <div class="col form-group">
                 <label class="font-weight-bold" for="vote">Vote</label>
                 <select class="form-control" name="vote" id="vote">
+                    <option value="">Inserisci il voto minimo</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -82,7 +97,7 @@
             </div>
             
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-dark">Invia</button>
+                <button type="submit" class="btn btn-dark">Filtra</button>
             </div>
         </form>
 
@@ -104,17 +119,7 @@
         <!-- riga di intestazione -->
         <?php
 
-        //ricaviamoci i dati del form
-        // Need Parking
-        if(isset($_GET['need_parking'])){
-            // ci salviamo la richiesta del client
-            $needParking = intval($_GET["need_parking"]);
-        }else {
-            $needParking = null;
-        }
-
-        // Vote
-        $vote = intval($_GET['vote']);
+        
 
 
             // var_dump($needParking);
